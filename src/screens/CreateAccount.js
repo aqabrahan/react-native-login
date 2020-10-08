@@ -1,11 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
+import { createAccount } from '../api/mock';
 
-const CreateAccount = props => {
+const CreateAccount = ({navigation}) => {
+  const createUser = () => {
+    createAccount('test@test.ca', 'password1')
+      .then(() => {
+        navigation.navigate('Home');
+      })
+      .catch((err) => console.log('error:', err.message));
+  };
   return (
-    <View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Create Account</Text>
+      <Button title="Create user" onPress={createUser} />
+      <Button title="Log in" onPress={() => navigation.navigate('Login')} />
     </View>
   )
 }
