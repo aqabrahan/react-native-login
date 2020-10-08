@@ -6,7 +6,7 @@ import { login } from '../api/mock';
 const Login = ({ navigation }) => {
   const [error, setError] = useState(null);
   const loginUser = () => {
-    login('test@test.ca', 'password', false)
+    login('test@test.ca', 'password')
       .then(() => {
         navigation.navigate('Home');
       })
