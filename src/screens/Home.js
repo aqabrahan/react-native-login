@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, Button } from 'react-native';
 import { getUsers } from '../api/mock';
+import { setToken } from '../api/token';
 
 const Home = ({ navigation }) => {
   const [users, setUsers] = useState([]);
   const [hasLoadedUsers, setHasLoadedUsers] = useState(false);
-  const [userLoadingErrorMessage, setUserLoadingErrorMessage] = useState('');
+  const [userLoadingErrorMessage, setUserLoadingErrorMessage] = useState(null);
 
   const loadUsers = () => {
     getUsers()
@@ -17,7 +18,14 @@ const Home = ({ navigation }) => {
     .catch(handleUserLoadingError);
   }
 
-  const handleUserLoadingError = (err) => {
+  const logout = async () => {
+    setHasLoadedUsers(false);
+    setUsers([]);
+    await setToken('');
+    navigation.navigate('Login');
+  }
+
+  const handleUserLoadingError = (res) => {
     if (res.error === 401) {
       navigation.navigate('Login');
     } else {
@@ -28,7 +36,14 @@ const Home = ({ navigation }) => {
   }
 
   useEffect(() => {
-    loadUsers();
+    const didFocusSubscription = navigation.addListener('didFocus', () => {
+      if (!hasLoadedUsers) {
+        loadUsers();
+      }
+    })
+    return () => {
+      didFocusSubscription.remove();
+    }
   }, [])
   return (
     <View>
@@ -36,7 +51,11 @@ const Home = ({ navigation }) => {
       {users.length > 0 && users.map(user => (
         <Text key={user.email}>{user.email}</Text>
       ))}
-      <Button title="Log out" onPress={() => navigation.navigate('Login')} />
+      {userLoadingErrorMessage
+        &&
+        <Text>{userLoadingErrorMessage}</Text>
+      }
+      <Button title="Log out" onPress={logout} />
     </View>
   )
 }

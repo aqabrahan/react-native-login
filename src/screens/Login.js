@@ -2,12 +2,16 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { View, Text, Button } from 'react-native';
 import { login } from '../api/mock';
+import { setToken } from '../api/token';
+
 
 const Login = ({ navigation }) => {
   const [error, setError] = useState(null);
-  const loginUser = () => {
+  const loginUser = async () => {
+    setError(null);
     login('test@test.ca', 'password')
-      .then(() => {
+      .then(async (res) => {
+        await setToken(res.auth_token);
         navigation.navigate('Home');
       })
       .catch((err) => {
