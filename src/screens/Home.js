@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, Button } from 'react-native';
-import { getUsers } from '../api/mock';
+import { getUsers } from '../api/user';
+//import { getUsers } from '../api/mock';
+//import { setToken } from '../api/token';
 import { setToken } from '../api/token';
 
 const Home = ({ navigation }) => {
@@ -9,16 +11,22 @@ const Home = ({ navigation }) => {
   const [userLoadingErrorMessage, setUserLoadingErrorMessage] = useState(null);
 
   const loadUsers = () => {
+    setHasLoadedUsers(false);
+    setUserLoadingErrorMessage(null);
+    console.log('###---loadUsers')
     getUsers()
-      .then((res) => {
+      .then(({ users }) => {
+        console.log('###---users')
+        console.log(users)
         setHasLoadedUsers(true);
-        setUsers(res.users);
+        setUsers(users);
       }
     )
     .catch(handleUserLoadingError);
   }
 
   const logout = async () => {
+    console.log('### -- logout');
     setHasLoadedUsers(false);
     setUsers([]);
     await setToken('');
@@ -26,7 +34,9 @@ const Home = ({ navigation }) => {
   }
 
   const handleUserLoadingError = (res) => {
-    if (res.error === 401) {
+    console.log('#### -- res')
+    console.log(res)
+    if (res && [400, 401, 403].includes(res.error)) {
       navigation.navigate('Login');
     } else {
       setHasLoadedUsers(false);
