@@ -28,13 +28,11 @@ export const post = async (destination, body) => {
     body: JSON.stringify(body),
   });
 
-  console.log('fetch result');
-  console.log(result);
-
   if (result.ok) {
     return await result.json();
   }
-  throw { error: result.status };
+  const { status } = result;
+  throw { status, message: 'Email and/or password are incorrect.' };
 };
 
 export const get = async (destination) => {

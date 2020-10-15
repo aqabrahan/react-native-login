@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { View, Text, Button } from 'react-native';
 import { createAccount } from '../api/mock';
 
@@ -18,10 +17,6 @@ const CreateAccount = ({navigation}) => {
       <Button title="Log in" onPress={() => navigation.navigate('Login')} />
     </View>
   )
-}
-
-CreateAccount.propTypes = {
-
 }
 
 export default CreateAccount

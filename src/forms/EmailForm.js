@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { ScrollView, View, StyleSheet, TextInput, Button, Text } from 'react-native';
 import { setToken } from '../api/token';
 
-
 const EmailForm = props => {
   const {
     buttonText,
@@ -16,33 +15,32 @@ const EmailForm = props => {
   const [error, setError] = useState(null);
 
   const submit = () => {
-    console.log('go login');
     onSubmit(email, password)
       .then(async (res) => {
-        console.log('####----res.token')
-        console.log(res.token)
         await setToken(res.token);
         onAuthentication();
       })
       .catch(err => {
-        console.log(err);
-        if (err && err.error) {
-          setError(err.error);
+        if (err) {
+          setError(err.message);
+        } else {
+          setError('Something went wrong');
         }
-        setError('Something went wrong.--');
       });
   }
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.container}>
       <TextInput
         onChangeText={(text) => setEmail(text)}
         value={email}
+        style={styles.input}
         keyboardType="email-address"
       />
       <TextInput
         onChangeText={(text) => setPassword(text)}
         value={password}
+        style={styles.input}
         secureTextEntry
       />
       <Button title={buttonText} onPress={submit} />
@@ -55,7 +53,26 @@ const EmailForm = props => {
 }
 
 EmailForm.propTypes = {
+  buttonText: PropTypes.string,
+};
 
-}
+EmailForm.defaultProps = {
+  buttonText: 'Enter',
+};
 
-export default EmailForm
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  input: {
+    height: 40,
+    width: 300,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 20,
+  },
+});
+
+export default EmailForm;

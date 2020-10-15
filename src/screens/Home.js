@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, ActivityIndicator } from 'react-native';
 import { getUsers } from '../api/user';
 //import { getUsers } from '../api/mock';
 //import { setToken } from '../api/token';
@@ -7,17 +7,16 @@ import { setToken } from '../api/token';
 
 const Home = ({ navigation }) => {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [hasLoadedUsers, setHasLoadedUsers] = useState(false);
   const [userLoadingErrorMessage, setUserLoadingErrorMessage] = useState(null);
 
   const loadUsers = () => {
     setHasLoadedUsers(false);
     setUserLoadingErrorMessage(null);
-    console.log('###---loadUsers')
     getUsers()
       .then(({ users }) => {
-        console.log('###---users')
-        console.log(users)
+        setLoading(false);
         setHasLoadedUsers(true);
         setUsers(users);
       }
@@ -26,7 +25,6 @@ const Home = ({ navigation }) => {
   }
 
   const logout = async () => {
-    console.log('### -- logout');
     setHasLoadedUsers(false);
     setUsers([]);
     await setToken('');
@@ -34,11 +32,10 @@ const Home = ({ navigation }) => {
   }
 
   const handleUserLoadingError = (res) => {
-    console.log('#### -- res')
-    console.log(res)
     if (res && [400, 401, 403].includes(res.error)) {
       navigation.navigate('Login');
     } else {
+      setLoading(false);
       setHasLoadedUsers(false);
       setUsers(res.users);
       setUserLoadingErrorMessage(res.message);
@@ -56,8 +53,9 @@ const Home = ({ navigation }) => {
     }
   }, [])
   return (
-    <View>
-      <Text>Home</Text>
+    <View style={styles.container}>
+      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      {!loading && <Text>Home</Text>}
       {users.length > 0 && users.map(user => (
         <Text key={user.email}>{user.email}</Text>
       ))}
@@ -65,9 +63,16 @@ const Home = ({ navigation }) => {
         &&
         <Text>{userLoadingErrorMessage}</Text>
       }
-      <Button title="Log out" onPress={logout} />
+      {!loading && <Button title="Log out" onPress={logout} />}
     </View>
   )
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default Home;
