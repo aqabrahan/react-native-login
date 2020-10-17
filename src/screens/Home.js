@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, Button, ActivityIndicator } from 'react-native';
 import { getUsers } from '../api/user';
-//import { getUsers } from '../api/mock';
-//import { setToken } from '../api/token';
 import { setToken } from '../api/token';
 
 const Home = ({ navigation }) => {
@@ -10,12 +8,15 @@ const Home = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [hasLoadedUsers, setHasLoadedUsers] = useState(false);
   const [userLoadingErrorMessage, setUserLoadingErrorMessage] = useState(null);
-
+  console.log('-------Home')
+  console.log(navigation)
   const loadUsers = () => {
+    console.log('-------loadUsers')
     setHasLoadedUsers(false);
     setUserLoadingErrorMessage(null);
     getUsers()
       .then(({ users }) => {
+        console.log('-------loadUsers OKOK')
         setLoading(false);
         setHasLoadedUsers(true);
         setUsers(users);
@@ -32,6 +33,8 @@ const Home = ({ navigation }) => {
   }
 
   const handleUserLoadingError = (res) => {
+    console.log('-------loadUsers ERROR')
+    console.log(res)
     if (res && [400, 401, 403].includes(res.error)) {
       navigation.navigate('Login');
     } else {
@@ -43,13 +46,14 @@ const Home = ({ navigation }) => {
   }
 
   useEffect(() => {
-    const didFocusSubscription = navigation.addListener('didFocus', () => {
+    const didFocusSubscription = navigation.addListener('focus', () => {
       if (!hasLoadedUsers) {
         loadUsers();
       }
     })
     return () => {
-      didFocusSubscription.remove();
+      //didFocusSubscription.remove();
+      didFocusSubscription;
     }
   }, [])
   return (
