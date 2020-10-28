@@ -1,16 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Button } from 'react-native';
 //import { login } from '../api/mock';
-import { login } from '../api/authentication';
+//import { login } from '../api/authentication';
 import EmailForm from '../forms/EmailForm';
 
+import AuthContext from '../context';
+
+
 const Login = ({ navigation }) => {
+  const { signIn } = useContext(AuthContext);
 
   return (
     <EmailForm
       buttonText="Entrar"
-      onSubmit={login}
+      onSubmit={signIn}
       onAuthentication={() => navigation.navigate('Home')}
     >
       <Button

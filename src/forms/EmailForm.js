@@ -15,7 +15,8 @@ const EmailForm = props => {
   const [error, setError] = useState(null);
 
   const submit = () => {
-    onSubmit(email, password)
+    onSubmit && onSubmit(email, password);
+    /* onSubmit(email, password)
       .then(async (res) => {
         await setToken(res.token);
         onAuthentication();
@@ -26,7 +27,7 @@ const EmailForm = props => {
         } else {
           setError('Something went wrong');
         }
-      });
+      }); */
   }
 
   return (

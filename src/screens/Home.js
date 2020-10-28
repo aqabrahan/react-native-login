@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, Button, ActivityIndicator } from 'react-native';
 import { getUsers } from '../api/user';
 import { setToken } from '../api/token';
+import AuthContext from '../context';
 
 const Home = ({ navigation }) => {
-  const [users, setUsers] = useState([]);
+  const { signOut } = useContext(AuthContext);
+  console.log(signOut);
+  /* const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hasLoadedUsers, setHasLoadedUsers] = useState(false);
   const [userLoadingErrorMessage, setUserLoadingErrorMessage] = useState(null);
@@ -21,8 +24,8 @@ const Home = ({ navigation }) => {
         setHasLoadedUsers(true);
         setUsers(users);
       }
-    )
-    .catch(handleUserLoadingError);
+      )
+      .catch(handleUserLoadingError);
   }
 
   const logout = async () => {
@@ -52,22 +55,25 @@ const Home = ({ navigation }) => {
       }
     })
     return () => {
-      //didFocusSubscription.remove();
       didFocusSubscription;
     }
-  }, [])
+  }, []) */
   return (
-    <View style={styles.container}>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      {!loading && <Text>Home</Text>}
-      {users.length > 0 && users.map(user => (
-        <Text key={user.email}>{user.email}</Text>
-      ))}
-      {userLoadingErrorMessage
-        &&
-        <Text>{userLoadingErrorMessage}</Text>
-      }
-      {!loading && <Button title="Log out" onPress={logout} />}
+    <View>
+      {/*<View style={styles.container}>
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+        {!loading && <Text>Home</Text>}
+        {users.length > 0 && users.map(user => (
+          <Text key={user.email}>{user.email}</Text>
+        ))}
+        {userLoadingErrorMessage
+          &&
+          <Text>{userLoadingErrorMessage}</Text>
+        }
+        {!loading && <Button title="Log out" onPress={logout} />}
+      </View>*/}
+      <Text>Signed in----!</Text>
+      <Button title="Sign out" onPress={signOut} />
     </View>
   )
 }
