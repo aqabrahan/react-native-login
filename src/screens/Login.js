@@ -11,8 +11,7 @@ import AuthContext from '../context';
 
 const Login = ({ navigation }) => {
   const { signIn, errorLogin } = useContext(AuthContext);
-  console.log('LOgiN --errorLogin')
-  console.log(errorLogin)
+
   return (
     <EmailForm
       buttonText="Entrar"
