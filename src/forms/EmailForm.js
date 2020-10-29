@@ -9,10 +9,11 @@ const EmailForm = props => {
     onSubmit,
     children,
     onAuthentication,
+    error,
   } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  //const [error, setError] = useState(null);
 
   const submit = () => {
     onSubmit && onSubmit(email, password);

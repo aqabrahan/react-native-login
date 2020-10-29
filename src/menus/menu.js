@@ -26,18 +26,27 @@ const menu = () => {
             ...prevState,
             userToken: action.token,
             isLoading: false,
+            errorLogin: null,
           };
         case 'SIGN_IN':
           return {
             ...prevState,
             isSignout: false,
             userToken: action.token,
+            errorLogin: null,
           };
         case 'SIGN_OUT':
           return {
             ...prevState,
             isSignout: true,
             userToken: null,
+            errorLogin: null,
+          };
+        case 'ERROR_LOGIN':
+          return {
+            ...prevState,
+            isSignout: false,
+            errorLogin: action.message,
           };
       }
     },
@@ -45,6 +54,7 @@ const menu = () => {
       isLoading: true,
       isSignout: false,
       userToken: null,
+      errorLogin: null,
     }
   );
 
@@ -87,7 +97,9 @@ const menu = () => {
 
         } catch (error) {
           console.log('message error login');
-          console.log(error);
+          const { message } = error;
+          console.log(message);
+          dispatch({ type: 'ERROR_LOGIN', message });
         }
       },
       signOut: async () => {
@@ -102,6 +114,7 @@ const menu = () => {
 
         dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
       },
+      errorLogin: state.errorLogin,
     }),
     []
   );

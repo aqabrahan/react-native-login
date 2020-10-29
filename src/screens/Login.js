@@ -8,14 +8,17 @@ import EmailForm from '../forms/EmailForm';
 import AuthContext from '../context';
 
 
-const Login = ({ navigation }) => {
-  const { signIn } = useContext(AuthContext);
 
+const Login = ({ navigation }) => {
+  const { signIn, errorLogin } = useContext(AuthContext);
+  console.log('LOgiN --errorLogin')
+  console.log(errorLogin)
   return (
     <EmailForm
       buttonText="Entrar"
       onSubmit={signIn}
       onAuthentication={() => navigation.navigate('Home')}
+      error={errorLogin}
     >
       <Button
         title="Create account"
